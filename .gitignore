@@ -1,7 +1,7 @@
-dist
-node_modules
 .env
-/houses
-/pdf2json
-/kml
-/dist
+node_modules/
+dist/
+houses/
+kml/
+pdf2json/
+.vscode/

@@ -127,10 +127,12 @@ export class HousesService {
 
         try {
             const docketRegex = /([A-Z])\w+-\d{2}-\d{6}/g; //Docket# regex - the anchor where our listing starts
-            const addressRegex = /\b(p\.?\s?o\.?\b|post office|\d{1,5}|\s)\s*(?:\S\s*){8,50}(AK|Alaska|AL|Alabama|AR|Arkansas|AZ|Arizona|CA|California|CO|Colorado|CT|Connecticut|DC|Washington\sDC|Washington\D\.C\.|DE|Delaware|FL|Florida|GA|Georgia|GU|Guam|HI|Hawaii|IA|Iowa|ID|Idaho|IL|Illinois|IN|Indiana|KS|Kansas|KY|Kentucky|LA|Louisiana|MA|Massachusetts|MD|Maryland|ME|Maine|MI|Michigan|MN|Minnesota|MO|Missouri|MS|Mississippi|MT|Montana|NC|North\sCarolina|ND|North\sDakota|NE|New\sEngland|NH|New\sHampshire|NJ|New\sJersey|NM|New\sMexico|NV|Nevada|NY|New\sYork|OH|Ohio|OK|Oklahoma|OR|Oregon|PA|Pennsylvania|RI|Rhode\sIsland|SC|South\sCarolina|SD|South\sDakota|TN|Tennessee|TX|Texas|UT|Utah|VA|Virginia|VI|Virgin\sIslands|VT|Vermont|WA|Washington|WI|Wisconsin|WV|West\sVirginia|WY|Wyoming)(\s+|\&nbsp\;|\<(\S|\s){1,10}\>){1,5}\d{5}/i; //Address regex - the anchor where our listing ends
+            const addressRegex =
+                /\b(p\.?\s?o\.?\b|post office|\d{1,5}|\s)\s*(?:\S\s*){8,50}(AK|Alaska|AL|Alabama|AR|Arkansas|AZ|Arizona|CA|California|CO|Colorado|CT|Connecticut|DC|Washington\sDC|Washington\D\.C\.|DE|Delaware|FL|Florida|GA|Georgia|GU|Guam|HI|Hawaii|IA|Iowa|ID|Idaho|IL|Illinois|IN|Indiana|KS|Kansas|KY|Kentucky|LA|Louisiana|MA|Massachusetts|MD|Maryland|ME|Maine|MI|Michigan|MN|Minnesota|MO|Missouri|MS|Mississippi|MT|Montana|NC|North\sCarolina|ND|North\sDakota|NE|New\sEngland|NH|New\sHampshire|NJ|New\sJersey|NM|New\sMexico|NV|Nevada|NY|New\sYork|OH|Ohio|OK|Oklahoma|OR|Oregon|PA|Pennsylvania|RI|Rhode\sIsland|SC|South\sCarolina|SD|South\sDakota|TN|Tennessee|TX|Texas|UT|Utah|VA|Virginia|VI|Virgin\sIslands|VT|Vermont|WA|Washington|WI|Wisconsin|WV|West\sVirginia|WY|Wyoming)(\s+|\&nbsp\;|\<(\S|\s){1,10}\>){1,5}\d{5}/i; //Address regex - the anchor where our listing ends
             const freeAndClearRegex = /F&C|F\s&\sC|FC|FREE\sAND\sCLEAR|FREE\s&\sCLEAR/gi;
             const bankRegex = /U\.?S\.?\sBANK|WELLS\sFARGO|DITECH\sFINANCIAL/gi;
-            const dateRegex = /(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})\s+(\d{4})/gi;
+            const dateRegex =
+                /(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})\s+(\d{4})/gi;
             const taxLienRegex = /LIEN/gi;
             const housesRawData = fs.readFileSync(jsonPath);
             const housesPdf = JSON.parse(housesRawData.toString());
@@ -184,7 +186,7 @@ export class HousesService {
                                 break;
                             }
 
-                            if (isInListingRange) {                                
+                            if (isInListingRange) {
                                 addToListing = true;
 
                                 if (page.Texts[index].x >= 51 && page.Texts[index].x <= 52) {
@@ -217,10 +219,10 @@ export class HousesService {
                                 }
 
                                 if (index > 0 && page.Texts[index].x === page.Texts[index - 1].x) {
-                                  // Multi-lines scenario
+                                    // Multi-lines scenario
                                     listing[listing.length - 1] += unescape(currentData);
                                     addToListing = false;
-                                }                                
+                                }
 
                                 if (unescape(currentData).match(addressRegex)) {
                                     //First address was found
@@ -255,7 +257,7 @@ export class HousesService {
                                     let parsedHouse: any = {};
                                     parsedHouse.checks = {};
                                     listing.push(addresses);
-                                    if (listing.length >= 17) {                                        
+                                    if (listing.length >= 17) {
                                         parsedHouse.isPP = isPP;
                                         if (!listing[13]) {
                                             continue; //TODO: Need to debug why we get listings with no auctionNumber (very few)
@@ -533,7 +535,7 @@ export class HousesService {
         const BIDLIST_FILE_PATH = 'houses/blHousing.pdf';
         const POSTPENMENTS_FILE_PATH = 'houses/psHousing.pdf';
         const BIDLIST_JSON_FILE_PATH = './pdf2json/blHousing.json';
-        const POSTPENMENTS_JSON_FILE_PATH = './pdf2json/psHousing.json';        
+        const POSTPENMENTS_JSON_FILE_PATH = './pdf2json/psHousing.json';
 
         try {
             // Download PDF files
@@ -632,7 +634,7 @@ export class HousesService {
 
             for (let house of houses) {
                 try {
-                    if (!house.address || !_.isArray(house.address) || house.address.length < 1) {                        
+                    if (!house.address || !_.isArray(house.address) || house.address.length < 1) {
                         throw new Error('Invalid address for house!');
                     }
                     house.address[0] = house.address[0].replace('undefined', '');
@@ -715,13 +717,13 @@ export class HousesService {
                 }
             }
 
-            console.log(`Updating ${houseUpdateRequests.length} houses with Zillow data...`)
+            console.log(`Updating ${houseUpdateRequests.length} houses with Zillow data...`);
             const updateResult = await Promise.all(houseUpdateRequests);
             if (!updateResult) {
                 console.log('Failed to update houses!');
                 return [];
             }
-            return houses;  
+            return houses;
         } catch (error) {
             console.log(error);
             return [];
@@ -776,9 +778,10 @@ export class HousesService {
         house.zillowData.unpaidBalance = transactionResponse?.unpaidBalance
             ? transactionResponse.unpaidBalance
             : undefined;
-        house.zillowData.lenderName = transactionResponse?.lenderName?.length && transactionResponse.lenderName.length > 0
-            ? transactionResponse.lenderName[0]
-            : undefined;
+        house.zillowData.lenderName =
+            transactionResponse?.lenderName?.length && transactionResponse.lenderName.length > 0
+                ? transactionResponse.lenderName[0]
+                : undefined;
 
         house.zillowInvalid = false;
         house.zillowData.lastZillowUpdate = new Date();
@@ -790,6 +793,9 @@ export class HousesService {
         const date = new Date(`${auctionID.substring(0, 2)}/01/${auctionID.substring(2, 6)}`);
         let currentMonth = moment(date).format('MMMM');
         let kml: string[] = [];
+
+        console.log(`auctionID: ${auctionID}`);
+        console.log(`globalPPDate: ${globalPPDate}`);
 
         kml.push('<kml xmlns = "http://www.opengis.net/kml/2.2"><Document><name>');
         kml.push(currentMonth);
@@ -870,7 +876,7 @@ export class HousesService {
 
         try {
             await writeFile('./kml/map.kml', retVal);
-            return console.log('KML file was saved successfully!');
+            console.log('KML file was saved successfully!');
         } catch (error) {
             console.log(error);
         }

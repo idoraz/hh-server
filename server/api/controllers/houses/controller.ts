@@ -80,10 +80,14 @@ export class Controller {
     async downloadMap(req: Request, res: Response, next: NextFunction) {
         try {
             try {
-                const globalPPDate = await ConfigService.updateGlobalPPDate(req.body.auctionId);
-                await HousesService.parseToKml(req.body.auctionId, globalPPDate);
+                const auctionID = await HousesService.getCurrentAuctionID();
+                if (!auctionID) {
+                    throw new Error('Unable to find current auctionID!');
+                }
+                const globalPPDate = await ConfigService.updateGlobalPPDate(auctionID);
+                await HousesService.parseToKml(auctionID, globalPPDate);
             } catch (error) {}
-            const fileObject = await HousesService.downloadKMLfile();
+            const fileObject = HousesService.downloadKMLfile();
             res.set('Access-Control-Expose-Headers', 'Content-Disposition');
             res.set('Content-Type', 'application/vnd.google-earth.kml+xml');
             res.set('Content-Length', fileObject.stat.size);
