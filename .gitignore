@@ -1,7 +1,9 @@
 .env
 node_modules/
 dist/
-houses/
-kml/
-pdf2json/
+houses/blHousing.pdf
+houses/psHousing.pdf
+kml/map.kml
+pdf2json/blHousing.json
+pdf2json/psHousing.json
 .vscode/
