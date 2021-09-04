@@ -106,6 +106,7 @@ export class ConfigService {
     }
 
     async setCurrentAuctionID(auctionID: string): Promise<string> {
+        if (!auctionID) return;
         const keyName = 'currentAuctionID';
 
         let config = await this.byKey(keyName);
